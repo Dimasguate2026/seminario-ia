@@ -31,7 +31,7 @@ export default async function handler(req, res) {
         const zoomTokenData = await zoomTokenRes.json();
 
         // 4. Registrar en la reunión de Zoom
-        const meetingId = "TU_MEETING_ID_DE_ZOOM"; // Cambia esto por tu ID de reunión
+        const meetingId = "83356385277"; // Cambia esto por tu ID de reunión
         const registrationRes = await fetch(`https://api.zoom.us/v2/meetings/${meetingId}/registrants`, {
             method: 'POST',
             headers: {
@@ -48,4 +48,5 @@ export default async function handler(req, res) {
     } catch (error) {
         return res.status(500).json({ success: false, message: "Error interno al conectar con Zoom." });
     }
+
 }
