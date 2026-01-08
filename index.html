@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso al Seminario IA - Nexus Integral</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: radial-gradient(circle at center, #0f172a, #020617); color: #f8fafc; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="glass p-8 rounded-2xl shadow-2xl w-full max-w-md text-center">
+        <h1 class="text-3xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">Nexus Integral</h1>
+        <p class="text-sm text-slate-400 mb-8 italic">"Transformando el ministerio con Inteligencia Artificial"</p>
+        
+        <form id="accessForm" class="space-y-6 text-left">
+            <div>
+                <label class="block text-xs uppercase tracking-widest text-blue-300 font-semibold mb-2">Correo Electrónico Registrado</label>
+                <input type="email" id="email" required placeholder="ejemplo@iglesia.com" class="w-full bg-slate-900/50 border border-slate-700 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+            </div>
+            <div>
+                <label class="block text-xs uppercase tracking-widest text-blue-300 font-semibold mb-2">Token de Acceso</label>
+                <input type="text" id="token" required placeholder="Ingresa el token de WhatsApp" class="w-full bg-slate-900/50 border border-slate-700 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+            </div>
+            <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-500 hover:to-emerald-500 py-3 rounded-lg font-bold transition-all shadow-lg">INGRESAR AL SEMINARIO</button>
+        </form>
+        <div id="result" class="mt-6 text-sm hidden"></div>
+    </div>
+
+    <script>
+        // Capturar token de la URL si existe
+        const urlParams = new URLSearchParams(window.location.search);
+        if(urlParams.has('token')) document.getElementById('token').value = urlParams.get('token');
+
+        document.getElementById('accessForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const resDiv = document.getElementById('result');
+            resDiv.classList.remove('hidden');
+            resDiv.innerHTML = "Validando acceso celestial...";
+
+            const response = await fetch('/api/validate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    email: document.getElementById('email').value,
+                    token: document.getElementById('token').value 
+                })
+            });
+
+            const data = await response.json();
+            if(data.success) {
+                resDiv.innerHTML = "✅ ¡Acceso Autorizado! Redirigiendo...";
+                window.location.href = data.join_url;
+            } else {
+                resDiv.innerHTML = "❌ " + data.message;
+                resDiv.className = "mt-6 text-sm text-red-400";
+            }
+        };
+    </script>
+</body>
+</html>
