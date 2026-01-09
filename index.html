@@ -15,11 +15,32 @@
         <h1 class="text-3xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">Nexus Integral</h1>
         <p class="text-sm text-slate-400 mb-8 italic">"Transformando el ministerio con Inteligencia Artificial"</p>
         
-        <form id="accessForm" class="space-y-6 text-left">
-            <div>
-                <label class="block text-xs uppercase tracking-widest text-blue-300 font-semibold mb-2">Correo Electrónico Registrado</label>
-                <input type="email" id="email" required placeholder="ejemplo@iglesia.com" class="w-full bg-slate-900/50 border border-slate-700 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none transition-all">
-            </div>
+       <form id="accessForm" class="space-y-6 text-left">
+    <div>
+        <label class="block text-xs uppercase tracking-wider text-blue-300 font-semibold mb-2">
+            Correo Electrónico Registrado
+        </label>
+        <input type="email" id="correo electrónico" required 
+               placeholder="ejemplo@iglesia.com" 
+               class="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-white">
+    </div>
+
+    <div>
+        <label class="block text-xs uppercase tracking-wider text-blue-300 font-semibold mb-2">
+            Token de Acceso
+        </label>
+        <input type="text" id="token" required 
+               placeholder="Ingresa tu código" 
+               class="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-white">
+    </div>
+
+    <button type="submit" 
+            class="w-full py-3 px-4 bg-gradient-to-r from-blue-500 to-emerald-500 text-white font-bold rounded-lg hover:opacity-90 transition-opacity">
+        INGRESAR AL SEMINARIO
+    </button>
+
+    <div id="resultado" class="mt-6 text-sm oculto"></div>
+</form>
            <script>
   // 1. Capturar el token de la URL si existe (ej. sitio.com/?token=ABC)
   const urlParams = new URLSearchParams(window.location.search);
@@ -73,3 +94,4 @@
 </body>
 
 </html>
+
