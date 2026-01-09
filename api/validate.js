@@ -5,7 +5,7 @@ export default async function handler(req, res) {
 
     // --- CONFIGURACIÓN PRIVADA ---
     const TOKEN_VALIDO = "SEMIA-NEXUS-DIA1-7G9B"; // El que generó tu app
-    const LISTA_BLANCA = [
+    const LISTA_BLANCA = [ "nexusintegral.2026gmail.com"
          // Añade aquí tus 50 correos
     ];
 
@@ -48,4 +48,5 @@ export default async function handler(req, res) {
     }
 
 }
+
 
