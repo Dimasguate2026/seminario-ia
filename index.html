@@ -20,44 +20,56 @@
                 <label class="block text-xs uppercase tracking-widest text-blue-300 font-semibold mb-2">Correo Electrónico Registrado</label>
                 <input type="email" id="email" required placeholder="ejemplo@iglesia.com" class="w-full bg-slate-900/50 border border-slate-700 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none transition-all">
             </div>
-            <div>
-                <label class="block text-xs uppercase tracking-widest text-blue-300 font-semibold mb-2">Token de Acceso</label>
-                <input type="text" id="token" required placeholder="Ingresa el token de WhatsApp" class="w-full bg-slate-900/50 border border-slate-700 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none transition-all">
-            </div>
-            <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-500 hover:to-emerald-500 py-3 rounded-lg font-bold transition-all shadow-lg">INGRESAR AL SEMINARIO</button>
-        </form>
-        <div id="result" class="mt-6 text-sm hidden"></div>
-    </div>
+           <script>
+  // 1. Capturar el token de la URL si existe (ej. sitio.com/?token=ABC)
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.has('token')) {
+    const tokenInput = document.getElementById('token');
+    if (tokenInput) tokenInput.value = urlParams.get('token');
+  }
 
-    <script>
-        // Capturar token de la URL si existe
-        const urlParams = new URLSearchParams(window.location.search);
-        if(urlParams.has('token')) document.getElementById('token').value = urlParams.get('token');
+  // 2. Manejar el envío del formulario
+  document.getElementById('accessForm').onsubmit = async (e) => {
+    e.preventDefault();
+    
+    const resDiv = document.getElementById('resultado');
+    resDiv.classList.remove('oculto');
+    resDiv.innerHTML = "Validando acceso celestial...";
 
-        document.getElementById('accessForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const resDiv = document.getElementById('result');
-            resDiv.classList.remove('hidden');
-            resDiv.innerHTML = "Validando acceso celestial...";
+    // Mapeo de datos: Obtenemos lo que el usuario escribió
+    const email = document.getElementById('correo electrónico').value;
+    const token = document.getElementById('token').value;
 
-            const response = await fetch('/api/validate', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    email: document.getElementById('email').value,
-                    token: document.getElementById('token').value 
-                })
-            });
+    try {
+      // Enviamos la información al validador api/validate.js
+      const respuesta = await fetch('/api/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, token }) // Aquí enviamos "email" al servidor
+      });
 
-            const data = await response.json();
-            if(data.success) {
-                resDiv.innerHTML = "✅ ¡Acceso Autorizado! Redirigiendo...";
-                window.location.href = data.join_url;
-            } else {
-                resDiv.innerHTML = "❌ " + data.message;
-                resDiv.className = "mt-6 text-sm text-red-400";
-            }
-        };
-    </script>
+      const datos = await respuesta.json();
+
+      if (datos.exito) {
+        resDiv.innerHTML = "✅ ¡Acceso autorizado! Redirigiendo...";
+        resDiv.className = "mt-6 text-sm text-green-400";
+        
+        // Redirección automática tras éxito
+        setTimeout(() => {
+          // Reemplaza esta URL por la de tu curso o revista
+          window.location.href = "https://seminario-ia-zeta.vercel.app"; 
+        }, 1500);
+      } else {
+        // SOLUCIÓN AL UNDEFINED: Usamos exactamente "datos.mensaje"
+        resDiv.innerHTML = "❌ " + (datos.mensaje || "Error desconocido");
+        resDiv.className = "mt-6 text-sm text-red-400";
+      }
+    } catch (error) {
+      resDiv.innerHTML = "❌ Error de conexión con el servidor.";
+      resDiv.className = "mt-6 text-sm text-red-400";
+    }
+  };
+</script>
 </body>
+
 </html>
