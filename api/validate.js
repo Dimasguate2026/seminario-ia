@@ -1,53 +1,39 @@
 export default async function handler(req, res) {
-    if (req.method !== 'POST') return res.status(405).json({ message: 'Method not allowed' });
+  // 1. Validar que la petición sea POST
+  if (req.method !== 'POST') {
+    return res.status(405).json({ mensaje: 'Método no permitido' });
+  }
 
-    const { email, token } = req.body;
+  // 2. Extraer datos del cuerpo de la solicitud
+  // Nota: 'email' y 'token' deben coincidir con los nombres que envíes desde tu formulario
+  const { email, token } = req.body;
 
-    // --- CONFIGURACIÓN PRIVADA ---
-    const TOKEN_VALIDO = "SEMIA-NEXUS-DIA1-7G9B"; // El que generó tu app
-    const LISTA_BLANCA = [ "nexusintegral.2026@gmail.com"
-         // Añade aquí tus 50 correos
-    ];
+  // --- CONFIGURACIÓN PRIVADA ---
+  const TOKEN_VALIDO = "SEMIA-NEXUS-DIA1-7G9B";
+  const LISTA_BLANCA = [
+    "nexusintegral.2026@gmail.com",
+    // Agrega aquí los correos adicionales entre comillas y separados por comas
+  ];
 
-    // 1. Validar el Token
-    if (token !== TOKEN_VALIDO) {
-        return res.status(401).json({ success: false, message: "El token es inválido o ya expiró." });
-    }
+  // 3. Validación del Token
+  if (token !== TOKEN_VALIDO) {
+    return res.status(401).json({ 
+      exito: false, 
+      mensaje: "El token no es válido o ya expiró." 
+    });
+  }
 
-    // 2. Validar el Correo (Lista Blanca)
-    if (!LISTA_BLANCA.includes(email.toLowerCase())) {
-        return res.status(403).json({ success: false, message: "Este correo no se encuentra registrado para el seminario." });
-    }
+  // 4. Validación de la Lista Blanca (Email)
+  if (!LISTA_BLANCA.includes(email)) {
+    return res.status(403).json({ 
+      exito: false, 
+      mensaje: "Este correo electrónico no está autorizado." 
+    });
+  }
 
-    try {
-        // 3. Obtener Token de Zoom (Usa tus variables de entorno de Vercel)
-        const auth = Buffer.from(`${process.env.ZOOM_CLIENT_ID}:${process.env.ZOOM_CLIENT_SECRET}`).toString('base64');
-        const zoomTokenRes = await fetch(`https://zoom.us/oauth/token?grant_type=account_credentials&account_id=${process.env.ZOOM_ACCOUNT_ID}`, {
-            method: 'POST',
-            headers: { 'Authorization': `Basic ${auth}` }
-        });
-        const zoomTokenData = await zoomTokenRes.json();
-
-        // 4. Registrar en la reunión de Zoom
-        const meetingId = "83356385277"; // Cambia esto por tu ID de reunión
-        const registrationRes = await fetch(`https://api.zoom.us/v2/meetings/${meetingId}/registrants`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${zoomTokenData.access_token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ email, first_name: "Pastor", last_name: "Inscrito" })
-        });
-
-        const regData = await registrationRes.json();
-        
-        return res.status(200).json({ success: true, join_url: regData.join_url });
-
-    } catch (error) {
-        return res.status(500).json({ success: false, message: "Error interno al conectar con Zoom." });
-    }
-
+  // 5. Si todo es correcto, conceder acceso
+  return res.status(200).json({ 
+    exito: true, 
+    mensaje: "Acceso concedido. Bienvenido al seminario." 
+  });
 }
-
-
-
