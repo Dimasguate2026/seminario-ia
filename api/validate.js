@@ -6,9 +6,7 @@ export default async function handler(req, res) {
     // --- CONFIGURACIÓN PRIVADA ---
     const TOKEN_VALIDO = "SEMIA-NEXUS-DIA1-7G9B"; // El que generó tu app
     const LISTA_BLANCA = [
-        "pastor1@ejemplo.com", 
-        "pastor2@ejemplo.com",
-        "tu-propio-email@gmail.com" // Añade aquí tus 50 correos
+         // Añade aquí tus 50 correos
     ];
 
     // 1. Validar el Token
@@ -50,3 +48,4 @@ export default async function handler(req, res) {
     }
 
 }
+
